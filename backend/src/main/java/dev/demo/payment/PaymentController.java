@@ -10,6 +10,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,6 +66,15 @@ public class PaymentController {
         payment.sessionId = session.getId();
         repository.save(payment);
         return Map.of("url", session.getUrl(), "paymentId", payment.id);
+    }
+
+    @GetMapping
+    public Page<Payment> history(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "20") int size) {
+        if (page < 0 || size < 1 || size > 100) {
+            throw new IllegalArgumentException("Invalid pagination parameters");
+        }
+        return repository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size));
     }
 
     @GetMapping("/by-session/{sessionId}")
