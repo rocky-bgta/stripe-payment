@@ -1,0 +1,11 @@
+server:
+  port: 8080
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/stripe_payment}
+stripe:
+  secret-key: ${STRIPE_SECRET_KEY:}
+  webhook-secret: ${STRIPE_WEBHOOK_SECRET:}
+app:
+  frontend-url: ${FRONTEND_URL:http://localhost:5173}
